@@ -16,7 +16,7 @@ ifneq (,$(DISABLE_ASSERT))
 CFLAGS  += -DDISABLE_ASSERT
 endif
 
-CFLAGS  += $(COMMON_FLAGS) -std=c99 -c -Wall \
+CFLAGS  += $(COMMON_FLAGS) -std=c99 -c -Wall -Werror \
            -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard \
            -DARM_MATH_CM4 -D__FPU_PRESENT=1 \
            -ffunction-sections -fdata-sections \
