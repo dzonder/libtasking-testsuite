@@ -1,3 +1,3 @@
-TARGET = low_power
+TARGET = perf_switch
 
 include ../../scripts/common.mk

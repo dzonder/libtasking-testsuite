@@ -1,3 +1,3 @@
 TARGET = regs_float
 
-include ../../scripts/makefile.in
+include ../../scripts/common.mk

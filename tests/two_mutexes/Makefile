@@ -1,4 +1,5 @@
 TARGET = two_mutexes
-CFLAGS = -U__STRICT_ANSI__
 
-include ../../scripts/makefile.in
+CFLAGS = -DTASK_MAX_TASKS=31U
+
+include ../../scripts/common.mk

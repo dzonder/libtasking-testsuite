@@ -5,3 +5,6 @@ build/
 *.o
 tags
 cscope.out
+*.out
+*.log
+*.pyc

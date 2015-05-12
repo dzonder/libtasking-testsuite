@@ -1,3 +1,3 @@
 TARGET = interrupt_spawn
 
-include ../../scripts/makefile.in
+include ../../scripts/common.mk

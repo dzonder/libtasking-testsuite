@@ -1,79 +1,70 @@
 // Verifies that synchronization behaves properly when there is more than one
-// mutex in the system (more than one memory location is being tagged by
-// exclusive access instructions): \texttt{critical[critidx]~==~1} assertion is
-// always true, led blinks red and green and segment display shows the
-// identifier of each task out of \texttt{N} tasks.
+// mutex in the system.
 
 #include "task.h"
 #include "sched/rr.h"
 #include "mutex.h"
-#include "led.h"
 #include "pit.h"
-#include "segment.h"
-#include "vtimer.h"
 
-#define N		6
+#define N_TASKS		10
+#define N		100
+#define M		10000
 
 static struct mutex *mutex[2];
 
-static volatile int critical[2] = { 0, 0 };
+static volatile int bad = 0;
 
-static unsigned seed[N + 2];
+static volatile int val[2] = { 0, 0 };
+
+static void test_bad(void *arg)
+{
+	for (int i = 0; i < N; ++i) {
+		for (int j = 0; j < M; ++j)
+			++bad;
+	}
+}
 
 static void test_mutex(void *arg)
 {
-	int i = (int)arg;
-	int critidx = i >= 2;
+	int critidx = (int)arg;
 
-	for (;;) {
-		// TODO: remove this when mutex_lock will be non-starving
-		wait((rand_r(&seed[i]) % 10000) * 120);
-
+	for (int i = 0; i < N; ++i) {
 		mutex_lock(mutex[critidx]);
 
-		++critical[critidx];
-
-		if (i < 2) {
-			led_ctrl(i == 0 ? LED_GREEN : LED_RED);
-		} else {
-			segment_set(1U, SEGMENT_DIGITS[i - 1]);
-		}
-
-		for(volatile int j = (rand_r(&seed[i]) % 10000) * 120; j > 0; --j)
-			assert(critical[critidx] == 1);
-
-		if (i < 2) {
-			led_ctrl(LED_OFF);
-		} else {
-			segment_set(1U, 0U);
-		}
-
-		--critical[critidx];
+		for (int j = 0; j < M; ++j)
+			++val[critidx];
 
 		mutex_unlock(mutex[critidx]);
+
+		task_yield();
 	}
 }
 
 int main(void)
 {
+	tid_t tids[N_TASKS][3];
+
 	pit_init();
-	vtimer_init();
-	segment_init();
-	led_init();
+	itm_enable();
 
 	task_init(&rr_scheduler, NULL);
 
 	mutex[0] = mutex_init();
 	mutex[1] = mutex_init();
 
-	task_spawn(test_mutex, (void *)0);
-	task_spawn(test_mutex, (void *)1);
+	for (int i = 0; i < N_TASKS; ++i) {
+		tids[i][0] = task_spawn(test_mutex, (void *)0);
+		tids[i][1] = task_spawn(test_mutex, (void *)1);
+		tids[i][2] = task_spawn(test_bad, NULL);
+	}
 
-	for (int i = 0; i < N; ++i)
-		task_spawn(test_mutex, (void *)(i + 2));
+	for (int i = 0; i < N_TASKS; ++i) {
+		task_join(tids[i][0]);
+		task_join(tids[i][1]);
+		task_join(tids[i][2]);
+	}
 
-	for (;;)
-		task_yield();
+	itm_printf("%d %d %d\n", bad, val[0], val[1]);
 
 	return 0;
 }

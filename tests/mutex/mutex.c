@@ -2,11 +2,11 @@
 // display, \texttt{critical~==~1} assertion is always true and system never
 // deadlocks.
 
+#include "task.h"
+#include "sched/rr.h"
 #include "mutex.h"
 #include "pit.h"
-#include "sched/rr.h"
 #include "segment.h"
-#include "task.h"
 #include "vtimer.h"
 
 #define N		4

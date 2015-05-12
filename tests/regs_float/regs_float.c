@@ -42,6 +42,7 @@ int main(void)
 	pit_init();
 	vtimer_init();
 	segment_init();
+	itm_enable();
 
 	task_init(&fcfs_scheduler, NULL);
 
@@ -54,7 +55,7 @@ int main(void)
 	/* This is what we should see on the segment display
 	   if FP registers are preserved correctly: 1 1 */
 
-	for (;;);
+	itm_printf("OK\n"); /* Asserts did not fail */
 
 	return 0;
 }

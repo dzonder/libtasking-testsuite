@@ -1,3 +1,3 @@
 TARGET = basic
 
-include ../../scripts/makefile.in
+include ../../scripts/common.mk

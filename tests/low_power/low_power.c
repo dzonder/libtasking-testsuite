@@ -6,15 +6,15 @@
 #include "MK22F12.h"
 #include "led.h"
 #include "utils.h"
+#include "pit.h"
 
-struct wait_queue wait_queue_main_task;
 struct wait_queue wait_queue_led_task;
 
 static void led_task(void *arg)
 {
 	enum led_status status = LED_OFF;
 
-	for (;;) {
+	for (int i = 0; i < 10; ++i) {
 		led_ctrl(status ^= 1);
 
 		task_wait_queue_wait(&wait_queue_led_task);
@@ -30,6 +30,8 @@ void LPTimer_IRQHandler()
 
 int main(void)
 {
+	pit_init();
+	itm_enable();
 	led_init();
 
 	task_init(&rr_scheduler, NULL);
@@ -49,13 +51,13 @@ int main(void)
 		LPTMR0_CSR |= LPTMR_CSR_TIE_MASK;
 	}
 
-	task_wait_queue_init(&wait_queue_main_task);
 	task_wait_queue_init(&wait_queue_led_task);
 
-	task_spawn(led_task, NULL);
+	tid_t tid = task_spawn(led_task, NULL);
 
-	/* Main task goes to sleep indefinitely */
-	task_wait_queue_wait(&wait_queue_main_task);
+	task_join(tid);
+
+	itm_printf("OK\n");
 
 	return 0;
 }

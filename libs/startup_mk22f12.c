@@ -61,7 +61,8 @@ static void Reset_Handler(void) {
 	/* Call main program function - usually never returns. */
 	main();
 	/* In case it returns - endless loop. */
-	for (;;);
+hang:
+	goto hang;
 }
 
 /** Interrupt handler declarations **/

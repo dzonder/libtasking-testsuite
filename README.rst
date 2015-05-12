@@ -38,3 +38,19 @@ To build a specific test, e.g. basic, run:
 To build and program a specific test, run:
 
     make -C tests/basic prog
+
+To build and perform automatic tests, run:
+
+    make test
+
+To build and perform a specific automatic test, run:
+
+    make -C tests/low_power test
+
+To run performance tests:
+
+    make perf
+
+To generate performance report:
+
+    make perf_report

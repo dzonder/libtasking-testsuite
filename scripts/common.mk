@@ -6,7 +6,13 @@ ROOTDIR = ../..
 BINDIR  = $(ROOTDIR)/build
 LIBDIR  = libs
 
-COMMON_FLAGS = -g3 -O3
+COMMON_FLAGS = -g3
+
+ifneq (,$(OPTIMIZATIONS))
+COMMON_FLAGS += $(OPTIMIZATIONS)
+else
+COMMON_FLAGS += -O3
+endif
 
 ifneq (,$(ENABLE_TRACE))
 CFLAGS  += -DENABLE_TRACE -DTASK_DEFAULT_STACK_SIZE=1024
@@ -42,7 +48,7 @@ VPATH = $(ROOTDIR)
 
 .SECONDARY :
 
-.PHONY : all prog clean
+.PHONY : all prog run test clean
 
 all : $(BINDIR)/$(TARGET).bin
 
@@ -68,6 +74,12 @@ $(OBJDIR)/%.S.o : %.S
 
 prog : all
 	$(ROOTDIR)/scripts/prog.sh $(BINDIR)/$(TARGET).bin
+
+run : all
+	@$(ROOTDIR)/scripts/gdb.sh $(TARGET)
+
+test : all
+	@$(ROOTDIR)/scripts/test.sh $(TARGET)
 
 clean :
 	@rm -rvf $(BINDIR)
