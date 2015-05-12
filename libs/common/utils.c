@@ -15,11 +15,7 @@
 
 #define MSG_SIZE			128
 
-#ifdef ENABLE_TRACE
 static char msg[MSG_SIZE];
-#else
-static char msg[0];
-#endif
 
 void wait_us(int32_t us)
 {
