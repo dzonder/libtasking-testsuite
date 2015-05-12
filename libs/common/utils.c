@@ -54,12 +54,16 @@ static inline void breakpoint(void) {
 	goto *0xFFFFFFFFU;
 }
 
+#ifdef DISABLE_ASSERT
+void assert(bool cond) {}
+#else
 void assert(bool cond) __attribute__((noinline));
 void assert(bool cond)
 {
 	if (!cond)
 		breakpoint();
 }
+#endif
 
 __attribute__ ((used))
 void *_sbrk(ptrdiff_t increment)

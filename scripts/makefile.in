@@ -12,6 +12,10 @@ ifneq (,$(ENABLE_TRACE))
 CFLAGS  += -DENABLE_TRACE -DTASK_DEFAULT_STACK_SIZE=1024
 endif
 
+ifneq (,$(DISABLE_ASSERT))
+CFLAGS  += -DDISABLE_ASSERT
+endif
+
 CFLAGS  += $(COMMON_FLAGS) -std=c99 -c -Wall \
            -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard \
            -DARM_MATH_CM4 -D__FPU_PRESENT=1 \
