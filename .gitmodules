@@ -1,0 +1,3 @@
+[submodule "libs/tasking"]
+	path = libs/tasking
+	url = git@bitbucket.org:dzonder/libtasking.git

@@ -1,0 +1,7 @@
+.DS_Store
+*.sw[a-z]
+build/
+*.bin
+*.o
+tags
+cscope.out
