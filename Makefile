@@ -1,10 +1,14 @@
-.PHONY: all clean tags
+TESTS := $(dir $(shell find tests -name 'Makefile'))
 
-all :
-	@for d in tests/*/; do make -C $$d all; done
+.PHONY: all clean tags $(TESTS)
+
+all : $(TESTS)
+
+$(TESTS) :
+	$(MAKE) -C $@ all
 
 clean :
-	@for d in tests/*/; do make -C $$d clean; done
+	@for d in $(TESTS); do $(MAKE) -C $$d clean; done
 
 tags :
 	ctags -R .
