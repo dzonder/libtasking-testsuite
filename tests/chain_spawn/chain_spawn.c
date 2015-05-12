@@ -1,5 +1,5 @@
 // Chained task spawning: first task blinks led red and green, second
-// task displays "HELLO" on the segment display.
+// task displays ,,HELLO'' on the segment display.
 
 #include "task.h"
 #include "sched/fcfs.h"
