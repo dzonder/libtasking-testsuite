@@ -6,7 +6,7 @@ PERF_TESTS := $(shell cd $(TESTDIR); find . -type d -name 'perf_*')
 
 PERF_REPORT_OPTIMIZATIONS = O0 O3 Os
 
-.PHONY: all clean tags perf perf_report $(ALL_TESTS)
+.PHONY: all clean tags perf perf_report plot_report $(ALL_TESTS)
 
 all : $(ALL_TESTS)
 
@@ -14,7 +14,10 @@ $(ALL_TESTS) :
 	$(MAKE) -C $(TESTDIR)/$@ all
 
 clean :
-	@rm -rvf build *.log *.out
+	@rm -rvf build *.log *.out *.png
+
+mrproper : clean
+	@rm -rf report_*
 
 tags :
 	ctags -R .
@@ -45,3 +48,7 @@ perf_report :
 		mkdir report_$$opt;                  \
 		mv *.out report_$$opt;               \
 	done
+
+plot_report :
+	@python scripts/report.py
+	@feh *.png
