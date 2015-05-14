@@ -100,9 +100,9 @@ def plot_mutex(results_dir):
     y2 = [float(norm(results_dir, row.split(' ')[5])) / float(norm(results_dir, row.split(' ')[3])) for row in data]
     y3 = [float(norm(results_dir, row.split(' ')[6])) / float(norm(results_dir, row.split(' ')[3])) for row in data]
 
-    ax2.plot(x, y1, label='Without synchronization', marker='o', color='r')
-    ax2.plot(x, y2, label='With mutex (but no synchronization)', marker='o', color='g')
-    ax2.plot(x, y3, label='With synchronization', marker='o', color='b')
+    ax2.plot(x, y1, label='(1) Without synchronization', marker='o', color='r')
+    ax2.plot(x, y2, label='(2) With mutex (but no synchronization)', marker='o', color='g')
+    ax2.plot(x, y3, label='(3) With synchronization', marker='o', color='b')
 
     additional_yticks.append(round(y1[0]))
     additional_yticks.append(round(y2[0]))

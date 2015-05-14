@@ -8,9 +8,12 @@
 #include "semaphore.h"
 #include "segment.h"
 #include "mutex.h"
+#include "pit.h"
 
-#define N		5
+#define N		6
 #define CRIT_LIMIT	3
+
+#define N_TESTS		1000
 
 static struct mutex *mutex;
 static struct semaphore *sem;
@@ -23,11 +26,10 @@ static void test_semaphore(void *arg)
 {
 	int i = (int)arg;
 
-	for (;;) {
-		// TODO: remove this when mutex_lock will be non-starving
-		wait((rand_r(&seed[i]) % 10000) * 120);
-
+	for (int j = 0; j < N_TESTS; ++j) {
 		semaphore_wait(sem);
+
+		wait(120);
 
 		mutex_lock(mutex);
 		++critical;
@@ -35,7 +37,7 @@ static void test_semaphore(void *arg)
 
 		segment_low_set_segment(i, 1U);
 
-		for (volatile int i = (rand_r(&seed[i]) % 10000) * 120; i > 0; --i)
+		for (volatile int i = (rand_r(&seed[i]) % 100) * 120; i > 0; --i)
 			assert(critical <= CRIT_LIMIT);
 
 		segment_low_set_segment(i, 0U);
@@ -44,12 +46,19 @@ static void test_semaphore(void *arg)
 		--critical;
 		mutex_unlock(mutex);
 
+		wait(120);
+
 		semaphore_post(sem);
 	}
 }
 
 int main(void)
 {
+	tid_t tids[N];
+
+	pit_init();
+	itm_enable();
+
 	segment_low_init();
 	segment_low_set_digit(1U, 1U);
 
@@ -59,10 +68,12 @@ int main(void)
 	sem = semaphore_init(CRIT_LIMIT);
 
 	for (int i = 0; i < N; ++i)
-		task_spawn(test_semaphore, (void *)i);
+		tids[i] = task_spawn(test_semaphore, (void *)i);
 
-	for (;;)
-		task_yield();
+	for (int i = 0; i < N; ++i)
+		task_join(tids[i]);
+
+	itm_printf("OK\n");
 
 	return 0;
 }
