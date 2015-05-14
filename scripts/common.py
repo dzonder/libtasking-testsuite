@@ -8,7 +8,7 @@ assert len(sys.argv) == 3, "Usage: python %s <itmoutput> <gdboutput>" % sys.argv
 
 with open(sys.argv[1]) as f:
     itmoutput = f.readlines()
-    itmoutput = map(lambda line: line.replace('\x01', ''), itmoutput)
+    itmoutput = map(lambda line: line.strip(), itmoutput)
 
 with open(sys.argv[2]) as f:
     gdboutput = f.readlines()

@@ -9,8 +9,10 @@ PID_JLINK=$!
 
 sleep 5
 
-netcat localhost 2332 | tee $ROOT_DIR/$PROG.out &
+netcat localhost 2332 |& sed -u "s/[^a-zA-Z0-9 ']//g" | tee $ROOT_DIR/$PROG.out &
 PID_NETCAT=$!
+
+exec 0>&-
 
 arm-none-linux-gnueabi-gdb $ROOT_DIR/build/$PROG.elf -quiet \
 	-ex "source $ROOT_DIR/scripts/macros.gdb" \
@@ -19,7 +21,7 @@ arm-none-linux-gnueabi-gdb $ROOT_DIR/build/$PROG.elf -quiet \
 	-ex "bt" \
 	-ex "d" \
 	-ex "q" \
-	2>&1 | tee $ROOT_DIR/gdb.log
+	|& tee $ROOT_DIR/gdb.log
 
 kill $PID_JLINK $PID_NETCAT
 wait $PID_JLINK $PID_NETCAT 2>&1

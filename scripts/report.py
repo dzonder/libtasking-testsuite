@@ -14,7 +14,7 @@ def read_and_prepare(results_dir, fname):
     with open(os.path.join(results_dir, fname)) as f:
         data = f.readlines()
 
-    return map(lambda line: line.replace('\x01', '').strip(), data)
+    return map(lambda line: line.strip(), data)
 
 def norm(results_dir, v):
     return int(v) - int(read_and_prepare(results_dir, 'perf_nop.out')[1])
