@@ -1,8 +1,7 @@
 #!/bin/sh
 
 if [ $# -ne 1 -o ]; then
-	echo "Usage:"
-	echo "$0 flash_image.bin"
+	echo "Usage: $0 flash_image.bin"
 	exit
 fi
 
