@@ -75,7 +75,7 @@ xmin, xmax = ax1.get_xlim()
 ax1.xaxis.set_ticks(numpy.arange(xmin, xmax + 1, 1))
 
 ymin, ymax = ax1.get_ylim()
-step = pow10ceil(ymax / 10)
+step = pow10ceil(ymax / 10) * 2
 yticks = numpy.arange(ymin, ymax + 1, step)
 yticks = numpy.append(yticks, additional_yticks)
 ax1.yaxis.set_ticks(yticks)
@@ -115,7 +115,7 @@ plot_mutex(d)
 ymin, ymax = ax2.get_ylim()
 ax2.set_ylim(ymin, ymax * 1.30)
 
-step = pow10ceil(ymax / 10)
+step = pow10ceil(ymax / 100)
 
 ymin, ymax = ax2.get_ylim()
 yticks = numpy.arange(ymin, ymax + 1, step)
