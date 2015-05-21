@@ -78,10 +78,10 @@ $(OBJDIR)/%.S.o : %.S
 prog : all
 	$(ROOTDIR)/scripts/prog.sh $(BINDIR)/$(TARGET).bin
 
-run : all
+run : all prog
 	@$(ROOTDIR)/scripts/gdb.sh $(TARGET)
 
-test : all
+test : all prog
 	@$(ROOTDIR)/scripts/test.sh $(TARGET)
 
 clean :

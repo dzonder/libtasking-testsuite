@@ -28,14 +28,12 @@ test :
 	@for d in $(AUTO_TESTS); do                                \
 		$(MAKE) -C $(TESTDIR)/$$d test >> test.log 2>&1;   \
 		if [ "$$?" -eq "0" ]; then                         \
-			echo -n ".";                               \
+			echo ".\t$$d";                             \
 		else                                               \
-			echo -n "F";                               \
+			echo "F\t$$d";                             \
 		fi;                                                \
 	done
-	@echo ""
-	@cat test.log | grep "& FAILED" \
-		|| echo "All tests passed (`echo ${AUTO_TESTS} | wc -w`)."
+	@echo "Tests failed: `cat test.log | grep '& FAILED' | wc -l`"
 
 perf :
 	@for d in $(PERF_TESTS); do $(MAKE) -C $(TESTDIR)/$$d test; done

@@ -17,7 +17,7 @@ exec 0>&-
 arm-none-linux-gnueabi-gdb $ROOT_DIR/build/$PROG.elf -quiet \
 	-ex "source $ROOT_DIR/scripts/macros.gdb" \
 	-ex "b Reset_Handler:hang" \
-	-ex "lrst" \
+	-ex "rst" \
 	-ex "bt" \
 	-ex "d" \
 	-ex "q" \
