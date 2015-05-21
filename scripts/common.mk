@@ -4,7 +4,7 @@ OBJCOPY = $(LIBTASKING_TESTSUITE_TOOLCHAIN)objcopy
 ROOTDIR = ../..
 
 BINDIR  = $(ROOTDIR)/build
-LIBDIR  = libs
+LIBS   ?= libs/cmsis libs/common libs/tasking
 
 COMMON_FLAGS = -g3
 
@@ -31,10 +31,17 @@ LDFLAGS += $(COMMON_FLAGS) -nostartfiles -Tmk22fn1movlk12.lds \
 CFLAGSDIR := $(shell echo "$(CFLAGS)" | sha256sum | head -c 64)
 OBJDIR := $(BINDIR)/$(CFLAGSDIR)
 
-INCDIR  += $(shell cd $(ROOTDIR); find . -type d -name include)
+INCDIR  = include
 
-SOURCES += tests/$(TARGET)/$(TARGET).c
-SOURCES += $(shell cd $(ROOTDIR); find $(LIBDIR) -name '*.[cS]')
+ifneq ($(LIBS),)
+INCDIR  +=$(shell cd $(ROOTDIR); find $(LIBS) -type d -name include)
+endif
+
+SOURCES += tests/$(TARGET)/$(TARGET).c libs/startup_mk22f12.c
+
+ifneq ($(LIBS),)
+SOURCES += $(shell cd $(ROOTDIR); find $(LIBS) -name '*.[cS]')
+endif
 
 OBJECTS += $(patsubst %.c, %.o, $(filter %.c, $(SOURCES)))
 OBJECTS += $(patsubst %.S, %.S.o, $(filter %.S, $(SOURCES)))
@@ -58,8 +65,8 @@ $(BINDIR)/$(TARGET).d :
 	$(CC) -MM $(CFLAGS) $(addprefix $(ROOTDIR)/, $(SOURCES)) > $@
 
 ifneq ($(MAKECMDGOALS),clean)
-  $(shell mkdir -p $(BINDIR) $(dir $(OBJECTS)))
-  -include $(BINDIR)/$(TARGET).d
+$(shell mkdir -p $(BINDIR) $(dir $(OBJECTS)))
+-include $(BINDIR)/$(TARGET).d
 endif
 
 $(OBJDIR)/%.o : %.c
