@@ -40,16 +40,5 @@ void irq_disable(void);
 void itm_enable(void);
 void itm_sendmsg(const char *msg);
 int itm_printf(const char *format, ...);
-#ifdef ENABLE_TRACE
-#define TRACE(format, ...) do {						\
-	uint64_t ticks = time_get();					\
-	itm_printf("%010u%09u [%s:%d] " format "\n",			\
-			(uint32_t)(ticks / 1000000000ULL),		\
-			(uint32_t)(ticks % 1000000000ULL),		\
-			__FUNCTION__, __LINE__, ##__VA_ARGS__);		\
-} while (0)
-#else
-#define TRACE(...)
-#endif
 
 #endif /* _UTILS_H_ */
