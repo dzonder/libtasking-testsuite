@@ -1,5 +1,7 @@
 #include "MK22F12.h"
 
+#define __NVIC_PRIO_BITS	3
+
 /** Common startup procedure **/
 
 /* Following variables are defined in the linker script. */
@@ -58,6 +60,9 @@ static void Reset_Handler(void) {
 	for (dst = &_sbss; dst < &_ebss; ++dst)
 		*dst = 0;
 	Enable_Fpu();
+	/* Set device specific interrupt priorities to 8 */
+	for (uint32_t irq_n = INT_DMA0; irq_n <= INT_SDHC; ++irq_n)
+		NVIC_BASE_PTR->IP[irq_n] = 2 << (8 - __NVIC_PRIO_BITS);
 	/* Call main program function - usually never returns. */
 	main();
 	/* In case it returns - endless loop. */
