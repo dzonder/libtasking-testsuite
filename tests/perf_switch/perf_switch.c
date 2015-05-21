@@ -23,14 +23,26 @@ static void task_b(void *arg)
 
 int main(void)
 {
+	struct task_opt opt = {
+		.task = NULL,
+		.arg = NULL,
+		.priority = TASK_DEFAULT_PRIORITY,
+		.stack_size = TASK_DEFAULT_STACK_SIZE,
+		.user_stack = NULL,
+		.privileged = true,
+	};
+
 	pit_init();
 	time_init();
 	itm_enable();
 
 	task_init(&fcfs_scheduler, NULL);
 
-	task_spawn(task_a, NULL);
-	task_spawn(task_b, NULL);
+	opt.task = task_a;
+	task_spawn_opt(&opt);
+
+	opt.task = task_b;
+	task_spawn_opt(&opt);
 
 	task_yield();
 
