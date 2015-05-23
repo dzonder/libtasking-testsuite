@@ -2,8 +2,22 @@
 **libtasking** testsuite
 ========================
 
-:Author: Michal Olech <michal.olech@students.mimuw.edu.pl>
+:Author: Michal Olech <michal.olech@gmail.com>
+:License: MIT
 
+
+The test suite is run on a platform containing Kinetis Cortex-M4 MCU, 16 MHz
+crystal oscillator, LED diode and Segment display. The following parts are
+used:
+
+===============  ===============
+Component        Part name
+===============  ===============
+MCU              MK22FN1M0VLK12
+16 MHz Crystal   7B-16.000MEEQ-T
+LED              MCL056PURGW
+Segment display  703-0186
+===============  ===============
 
 Prerequisites
 -------------
@@ -14,14 +28,21 @@ variable should be set, e.g.:
 
     LIBTASKING_TESTSUITE_TOOLCHAIN=arm-eabi-
 
+Additionally J-Link Commander and J-Link GDBServer should be installed and
+available in path.
+
 Tested versions:
 
-========  =====
-binutils  2.24
-gcc       4.9.2
-newlib    2.0.0
-gdb       7.8.1
-========  =====
+================  =======
+Tool              Version
+================  =======
+binutils          2.24
+gcc               4.9.2
+newlib            2.0.0
+gdb               7.8.1
+J-Link Commander  4.9.8d
+J-Link GDBServer  4.9.8d
+================  =======
 
 
 Compilation
