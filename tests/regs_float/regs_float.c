@@ -1,5 +1,5 @@
 // Preserving of floating-point registers: \texttt{x~==~1} assertion is true
-// and segment display displays ,,11''.
+// and segment display displays \texttt{11}.
 
 #include "pit.h"
 #include "sched/fcfs.h"

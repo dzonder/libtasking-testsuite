@@ -17,7 +17,7 @@ clean :
 	@rm -rvf build *.log *.out *.png
 
 mrproper : clean
-	@rm -rf report_*
+	@rm -rf report_* tags
 
 tags :
 	ctags -R .

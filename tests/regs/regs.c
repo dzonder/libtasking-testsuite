@@ -1,5 +1,5 @@
 // Preserving of core registers: \texttt{x~==~1} assertion is true and segment
-// display displays ,,\textvisiblespace 1''.
+// display displays \texttt{\textvisiblespace 1}.
 
 #include "pit.h"
 #include "sched/fcfs.h"
