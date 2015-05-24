@@ -28,9 +28,9 @@ test :
 	@for d in $(AUTO_TESTS); do                                \
 		$(MAKE) -C $(TESTDIR)/$$d test >> test.log 2>&1;   \
 		if [ "$$?" -eq "0" ]; then                         \
-			echo ".\t$$d";                             \
+			echo ".\t`basename $$d`";                  \
 		else                                               \
-			echo "F\t$$d";                             \
+			echo "F\t`basename $$d`";                  \
 		fi;                                                \
 	done
 	@echo "Tests failed: `cat test.log | grep '& FAILED' | wc -l`"
