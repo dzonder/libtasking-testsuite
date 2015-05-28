@@ -6,6 +6,7 @@
 
 #include "task.h"
 #include "sched/rr.h"
+#include "sync_low.h"
 #include "mutex.h"
 #include "segment.h"
 
@@ -25,7 +26,7 @@ static struct mutex *mutex;
 static struct mutex *s[N];
 
 static int eaten[N] = { 0 };
-static volatile int eating = 0;
+static volatile uint32_t eating = 0;
 
 static unsigned seed[N];
 
@@ -33,25 +34,25 @@ static void think(int i)
 {
 	// TODO: enable ith led on left display
 
-	for (volatile int j = 10 * 1000 * 120; j > 0; --j);
+	for (volatile int j = 10; j > 0; --j);
 
 	// TODO: disable ith led on left display
 }
 
 static void eat(int i)
 {
-	++eating;
+	sync_low_atomic_inc(&eating);
 
 	segment_low_set_segment(i, 1U);
 
 	++eaten[i]; /* Record that i-th philosopher eated (to verify equal share) */
 
-	for (volatile int j = (rand_r(&seed[i]) % 10000) * 120; j > 0; --j)
-		assert(eating <= N - 1);
+	for (volatile int j = (rand_r(&seed[i]) % 1000) + 1000; j > 0; --j)
+		assert(eating <= N / 2);
 
 	segment_low_set_segment(i, 0U);
 
-	--eating;
+	sync_low_atomic_dec(&eating);
 }
 
 static void test(int i)
